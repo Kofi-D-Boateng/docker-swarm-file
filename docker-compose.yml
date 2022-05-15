@@ -1,0 +1,81 @@
+version: 3
+
+services:
+  legacy-auth:
+    image: kdboateng/lb-auth-service
+    environment:
+      - AUTH_PORT=8081
+      - JWT_ALGO=HS256
+      - JWT_EXPIRES_IN=1hr
+      - LB_BANK_API_PORT=8080
+      - LB_MESSENGER_API_PORT=5500
+      - LB_BANK_API_DOMAIN:
+      - LB_MESSENGER_API_DOMAIN:
+      - CORS_ALLOW_ORIGINS:
+    ports:
+      - "8081:8081"
+    networks:
+      - frontend
+      - notification
+      - backend
+    deploy:
+      replicas: 3
+      restart_policy:
+        max_attempts: 3
+
+  legacy-frontend:
+    image: kdboateng/lb-frontend-service
+    environment:
+      LB_AUTH_URI:
+      LB_NOTI_URI:
+    ports:
+      - "80:3000"
+    networks:
+      - frontend
+    deploy:
+      replicas: 1
+      restart_policy:
+        max_attempts: 3
+
+  legacy-notifications:
+    image: kdboateng/lb-notification-service
+    environment:
+      - MONGO_DB_URI:
+      - CORS_ALLOW_ORIGINS:
+      - NOTI_PORT: 5500
+      - MAILER_SMTP_HOST:
+      - MAILER_SERVICE:
+      - MAILER_USERNAME:
+      - MAILER_PWD:
+      - ACCT_AUTH_LINK:
+    ports:
+      - "5500:5500"
+    networks:
+      - notification
+    depends_on:
+      - legacy-auth
+    deploy:
+      replicas: 1
+      restart_policy:
+        max_attempts: 3
+
+  legacy-bank:
+    image: kdboateng/lb-banking-api
+    environment:
+      - SPRING_DATASOURCE_URL:
+      - SPRING_DATASOURCE_USERNAME:
+      - SPRING_DATASOURCE_PASSWORD:
+      - SPRING_JPA_HIBERNATE_DDL_AUTO:
+      - SPRING_JPA_SHOW_SQL:
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:
+      - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL:
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    depends_on:
+      - legacy-auth
+    deploy:
+      replicas: 1
+      restart_policy:
+        max_attempts: 3
