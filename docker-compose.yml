@@ -1,81 +1,107 @@
-version: 3
+version: "3"
 
 services:
-  legacy-auth:
-    image: kdboateng/lb-auth-service
+  lb-webproxy-service:
+    networks:
+      - frontend
+    container_name: lb-proxy
+    image: kdboateng/lb-webproxy:1.0
+    ports:
+      - "80:80"
+    links:
+      - lb-frontend:lb-frontend
+      - lb-auth:lb-auth
+    deploy:
+      replicas: 1
+      restart_policy:
+        max_attempts: 2
+
+  lb-auth-service:
+    networks:
+      - frontend
+      - notification
+      - backend
+    container_name: lb-auth
+    image: kdboateng/lb-auth-service:1.0
     environment:
       - AUTH_PORT=8081
-      - JWT_ALGO=HS256
-      - JWT_EXPIRES_IN=1hr
+      - JWT_ALGO=
+      - JWT_EXPIRES_IN=
       - LB_BANK_API_PORT=8080
       - LB_MESSENGER_API_PORT=5500
-      - LB_BANK_API_DOMAIN:
-      - LB_MESSENGER_API_DOMAIN:
-      - CORS_ALLOW_ORIGINS:
+      - LB_BANK_API_DOMAIN=
+      - LB_MESSENGER_API_DOMAIN=
+      - CORS_ALLOW_ORIGINS=*
     ports:
       - "8081:8081"
-    networks:
-      - frontend
-      - notification
-      - backend
-    deploy:
-      replicas: 3
-      restart_policy:
-        max_attempts: 3
-
-  legacy-frontend:
-    image: kdboateng/lb-frontend-service
-    environment:
-      LB_AUTH_URI:
-      LB_NOTI_URI:
-    ports:
-      - "80:3000"
-    networks:
-      - frontend
     deploy:
       replicas: 1
       restart_policy:
-        max_attempts: 3
+        max_attempts: 2
 
-  legacy-notifications:
-    image: kdboateng/lb-notification-service
+  lb-frontend-service:
+    networks:
+      - frontend
+    container_name: lb-frontend
+    image: kdboateng/lb-frontend-service:1.0
     environment:
-      - MONGO_DB_URI:
-      - CORS_ALLOW_ORIGINS:
-      - NOTI_PORT: 5500
-      - MAILER_SMTP_HOST:
-      - MAILER_SERVICE:
-      - MAILER_USERNAME:
-      - MAILER_PWD:
-      - ACCT_AUTH_LINK:
+      - LB_DOMAIN_NAME=
+    ports:
+      - "3000:3000"
+    deploy:
+      replicas: 1
+      restart_policy:
+        max_attempts: 2
+
+  lb-notification-service:
+    networks:
+      - notification
+    container_name: lb-notifications
+    image: kdboateng/lb-notification-service:1.0
+    environment:
+      - MONGO_DB_URI=
+      - CORS_ALLOW_ORIGINS=*
+      - NOTI_PORT=5500
+      - MAILER_SMTP_HOST=undefined
+      - MAILER_SERVICE=undefined
+      - MAILER_USERNAME=undefined
+      - MAILER_PWD=undefined
+      - ACCT_AUTH_LINK=undefined
     ports:
       - "5500:5500"
-    networks:
-      - notification
     depends_on:
-      - legacy-auth
+      - lb-auth
     deploy:
       replicas: 1
       restart_policy:
-        max_attempts: 3
+        max_attempts: 2
 
-  legacy-bank:
-    image: kdboateng/lb-banking-api
-    environment:
-      - SPRING_DATASOURCE_URL:
-      - SPRING_DATASOURCE_USERNAME:
-      - SPRING_DATASOURCE_PASSWORD:
-      - SPRING_JPA_HIBERNATE_DDL_AUTO:
-      - SPRING_JPA_SHOW_SQL:
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:
-      - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL:
-    ports:
-      - "8080:8080"
+  lb-bank-service:
     networks:
       - backend
+    container_name: lb-bank
+    image: kdboateng/lb-banking-api:1.0
+    environment:
+      - SPRING_DATASOURCE_URL=
+      - SPRING_DATASOURCE_USERNAME=
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=false
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=
+      - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=true
+    ports:
+      - "8080:8080"
     depends_on:
-      - legacy-auth
+      - lb-auth
     deploy:
       replicas: 1
       restart_policy:
-        max_attempts: 3
+        max_attempts: 2
+
+networks:
+  frontend:
+    external: true
+  notification:
+    external: true
+  backend:
+    external: true
