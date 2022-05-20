@@ -16,6 +16,20 @@ services:
       restart_policy:
         max_attempts: 2
 
+  lb-redis-cache-service:
+    networks:
+      - backend
+    container_name: lb-redis-cache
+    image: kdboateng/lb-redis-service:1.0
+    ports:
+      - "6379:6379"
+    depends_on:
+      - lb-auth
+    deploy:
+      replicas: 2
+      restart_policy:
+        max_attempts: 2
+
   lb-auth-service:
     networks:
       - frontend
@@ -25,12 +39,12 @@ services:
     image: kdboateng/lb-auth-service:1.0
     environment:
       - AUTH_PORT=8081
-      - JWT_ALGO=
-      - JWT_EXPIRES_IN=
+      - JWT_ALGO=HS256
+      - JWT_EXPIRES_IN=1hr
       - LB_BANK_API_PORT=8080
       - LB_MESSENGER_API_PORT=5500
-      - LB_BANK_API_DOMAIN=
-      - LB_MESSENGER_API_DOMAIN=
+      - LB_BANK_API_DOMAIN=http://lb-bank
+      - LB_MESSENGER_API_DOMAIN=http://lb-notifications
       - CORS_ALLOW_ORIGINS=*
     ports:
       - "8081:8081"
@@ -45,7 +59,7 @@ services:
     container_name: lb-frontend
     image: kdboateng/lb-frontend-service:1.0
     environment:
-      - LB_DOMAIN_NAME=
+      - LB_DOMAIN_NAME=http://lb-auth/api/v1
     ports:
       - "3000:3000"
     deploy:
