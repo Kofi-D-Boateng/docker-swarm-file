@@ -5,7 +5,7 @@ services:
     networks:
       - frontend
     container_name: lb-proxy
-    image: kdboateng/lb-webproxy:1.0
+    image: kdboateng/lb-webproxy:1.1
     ports:
       - "80:80"
     links:
@@ -16,17 +16,17 @@ services:
       restart_policy:
         max_attempts: 2
 
-  lb-redis-cache-service:
+  lb-redis-service:
     networks:
       - backend
-    container_name: lb-redis-cache
-    image: kdboateng/lb-redis-service:1.0
+    container_name: lb-redis
+    image: kdboateng/lb-redis-service:1.1
     ports:
       - "6379:6379"
     depends_on:
       - lb-auth
     deploy:
-      replicas: 2
+      replicas: 1
       restart_policy:
         max_attempts: 2
 
@@ -36,32 +36,20 @@ services:
       - notification
       - backend
     container_name: lb-auth
-    image: kdboateng/lb-auth-service:1.0
+    image: kdboateng/lb-auth-service:1.1
     environment:
+      - REDIS_CACHE_PORT=6379
+      - REDIS_CACHE_IP=lb-redis
       - AUTH_PORT=8081
       - JWT_ALGO=HS256
-      - JWT_EXPIRES_IN=1hr
+      - JWT_EXPIRES_IN=1800000
       - LB_BANK_API_PORT=8080
-      - LB_MESSENGER_API_PORT=5500
+      - LB_NOTIFICATIONS_API_PORT=5500
       - LB_BANK_API_DOMAIN=http://lb-bank
-      - LB_MESSENGER_API_DOMAIN=http://lb-notifications
+      - LB_NOTIFICATIONS_API_DOMAIN=http://lb-notifications
       - CORS_ALLOW_ORIGINS=*
     ports:
       - "8081:8081"
-    deploy:
-      replicas: 1
-      restart_policy:
-        max_attempts: 2
-
-  lb-frontend-service:
-    networks:
-      - frontend
-    container_name: lb-frontend
-    image: kdboateng/lb-frontend-service:1.0
-    environment:
-      - LB_DOMAIN_NAME=http://lb-auth/api/v1
-    ports:
-      - "3000:3000"
     deploy:
       replicas: 1
       restart_policy:
@@ -71,16 +59,16 @@ services:
     networks:
       - notification
     container_name: lb-notifications
-    image: kdboateng/lb-notification-service:1.0
+    image: kdboateng/lb-notification-service:1.1
     environment:
-      - MONGO_DB_URI=
+      - MONGO_DB_URI=mongodb+srv://autodrive-admin-1:lamarrazorback2!@autodriveone.70icx.mongodb.net/legacyDB
       - CORS_ALLOW_ORIGINS=*
       - NOTI_PORT=5500
-      - MAILER_SMTP_HOST=undefined
-      - MAILER_SERVICE=undefined
-      - MAILER_USERNAME=undefined
-      - MAILER_PWD=undefined
-      - ACCT_AUTH_LINK=undefined
+      - MAILER_SMTP_HOST=smtp.gmail.com
+      - MAILER_SERVICE=gmail
+      - MAILER_USERNAME=helpfromautodrive@gmail.com
+      - MAILER_PWD=AllAmerican2!
+      - ACCT_AUTH_LINK=http://localhost/authentication/confirm-account
     ports:
       - "5500:5500"
     depends_on:
@@ -94,14 +82,14 @@ services:
     networks:
       - backend
     container_name: lb-bank
-    image: kdboateng/lb-banking-api:1.0
+    image: kdboateng/lb-banking-api:1.1
     environment:
-      - SPRING_DATASOURCE_URL=
-      - SPRING_DATASOURCE_USERNAME=
-      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database-1.cclv1bm5h6ql.us-east-2.rds.amazonaws.com:5432/legacydb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=AllAmerican217!
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_SHOW_SQL=false
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
       - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=true
     ports:
       - "8080:8080"
