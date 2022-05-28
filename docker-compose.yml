@@ -32,7 +32,6 @@ services:
 
   lb-auth-service:
     networks:
-      - frontend
       - notification
       - backend
     container_name: lb-auth
@@ -101,8 +100,6 @@ services:
         max_attempts: 2
 
 networks:
-  frontend:
-    external: true
   notification:
     external: true
   backend:
