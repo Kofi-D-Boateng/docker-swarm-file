@@ -45,3 +45,11 @@
 
     - Frontend
     Frontend tweaks will continue to come out as when needed.
+
+## FOR RECRUITERS TO TEST
+
+    - Want to try out without signing up?
+        - Username: kdboat2@gmail.com
+        - Password: PAssword217!
+    - Account to transfer to
+        - When trying to transfer money, send to this email: testingEmail@gmail.com
