@@ -2,7 +2,7 @@
 
 ## Link
 
-    [Legacy Banking] (legacybanking.us)
+    Legacy Banking: legacybanking.us
 
 ## Purpose of project
 
@@ -12,15 +12,18 @@
 ## Docker Architecture
 
     - Frontend
-        - [Typescript + ReactJS v.18 w/ Nginx] (https://github.com/Kofi-D-Boateng/LegacyBanking)
+        - Typescript + ReactJS v.18 w/ Nginx: https://github.com/Kofi-D-Boateng/LegacyBanking
     - Backend
         - Authentication & Authorization
-            - [NodeJS] (https://github.com/Kofi-D-Boateng/LegacyBankAuthMicroservice)
+            - LB-Auth 
+                - NodeJS: https://github.com/Kofi-D-Boateng/LegacyBankAuthMicroservice
         - Notifications
-            - [NodeJS version] (https://github.com/Kofi-D-Boateng/LegacyMailingAndMessageService)
-            - [Golang version] (https://github.com/Kofi-D-Boateng/legacy-notifications-go)
+            -   LB-Notifications
+                - NodeJS version: https://github.com/Kofi-D-Boateng/LegacyMailingAndMessageService
+                - Golang version: https://github.com/Kofi-D-Boateng/legacy-notifications-go
         - Banking Process
-            - [Java Spring Boot] (https://github.com/Kofi-D-Boateng/LegacyBankingBackend)
+            - LB-Banking-API
+                - Java Spring Boot: https://github.com/Kofi-D-Boateng/LegacyBankingBackend
     - Databases
         - Postgresql
         - Redis Caching
