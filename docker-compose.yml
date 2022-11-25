@@ -9,7 +9,6 @@ services:
       - "443:443:"
       - "80:80"
     deploy:
-      replicas: 3
       restart_policy:
         condition: on-failure
       placement:
