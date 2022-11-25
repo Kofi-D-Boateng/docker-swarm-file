@@ -1,35 +1,60 @@
 version: "3.4"
 
 services:
-  lb-frontend-service:
+  webproxy:
     networks:
       - frontend
-    container_name: lb-frontend
-    image: kdboateng/lb-frontend-service:1.2.1
+    image: kdboateng/nginx-certbot
     ports:
+      - "443:443:"
       - "80:80"
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          [node.hostname ==  ip-172-31-45-238.us-east-2.compute.internal]
+
+  frontend-service:
+    networks:
+      - frontend
+    image: kdboateng/lb-frontend-service:latest
+    ports:
+      - "3000:3000"
     environment:
       - REACT_APP_BUFFERTIME=600000
       - REACT_APP_API_VERSION=api/v1
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
 
-  lb-redis-service:
+  redis-service:
     networks:
       - backend
-    container_name: lb-redis
-    image: kdboateng/lb-redis-service:1.1
+    image: kdboateng/lb-redis-service:latest
     ports:
       - "6379:6379"
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          [node.hostname == ip-172-31-46-129.us-east-2.compute.internal]
 
-  lb-auth-service:
+  auth-service:
     networks:
       - frontend
       - notification
       - backend
-    container_name: lb-auth
-    image: kdboateng/lb-auth-service:1.2.2
+    image: kdboateng/lb-auth-service:latest
     environment:
       - REDIS_CACHE_PORT=6379
-      - REDIS_CACHE_IP=lb-redis
+      - REDIS_CACHE_DOMAIN=lb-redis-service
       - AUTH_PORT=8081
       - JWT_ALGO=HS256
       - JWT_EXPIRES_IN=1800000
@@ -40,18 +65,24 @@ services:
       - CORS_ALLOW_ORIGINS=*
     ports:
       - "8081:8081"
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          [node.hostname == ip-172-31-46-129.us-east-2.compute.internal]
 
-  lb-notification-service:
+  notification-service:
     networks:
       - notification
-    container_name: lb-notification
-    image: kdboateng/lb-notifications-go:1.0.0
+    image: kdboateng/lb-notifications-go:latest
     environment:
       - GO_ENV=prod
       - PORT=:5500
       - API_VERSION=api/v1
-      - MONGO_URI=
-      - DB_NAME=
+      - MONGO_URI=mongodb+srv://autodrive-admin-1:lamarrazorback2!@autodriveone.70icx.mongodb.net/?retryWrites=true&w=majority
+      - DB_NAME=legacyDB
       - USERS_COLLECTION=users
       - CUSTOMER_SERVICE_COLLECTION=customer_services
       - SMTP_HOST=smtp.office365.com
@@ -61,27 +92,38 @@ services:
       - ACCT_AUTH_LINK=http://www.legacybanking.us/confirm-account
     ports:
       - "5500:5500"
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
 
-  lb-bank-service:
+  bank-service:
     networks:
       - backend
-    container_name: lb-bank
-    image: kdboateng/lb-banking-api:1.2
+    image: kdboateng/lb-banking-api:latest
     environment:
-      - SPRING_DATASOURCE_URL=
-      - SPRING_DATASOURCE_USERNAME=
-      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database-1.c9zoanurtfd0.us-east-2.rds.amazonaws.com:5432/legacydb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=AllAmerican217!
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_SHOW_SQL=false
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
       - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=true
     ports:
       - "8080:8080"
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == manager]
 
 networks:
   frontend:
-    external: true
+    external: false
   notification:
-    external: true
+    external: false
   backend:
-    external: true
+    external: false
