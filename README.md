@@ -8,29 +8,14 @@ Legacy Banking: legacybanking.us
  - Working with AWS EC2 technology.
 
 ## Docker Architecture
-- Frontend
-    - Typescript + ReactJS v.18 w/ Nginx: https://github.com/Kofi-D-Boateng/LegacyBanking
+- Frontend: https://github.com/Kofi-D-Boateng/LegacyBanking
 - Backend
-  - Authentication & Authorization
-    - LB-Auth
-      - NodeJS: https://github.com/Kofi-D-Boateng/LegacyBankAuthMicroservice
-    - Notifications
-     - LB-Notifications
-      - NodeJS version: https://github.com/Kofi-D-Boateng/LegacyMailingAndMessageService
-      - Golang version: https://github.com/Kofi-D-Boateng/legacy-notifications-go
-    - Banking Process
-       - LB-Banking-API
-       - Java Spring Boot: https://github.com/Kofi-D-Boateng/LegacyBankingBackend
-  - Databases
-    - PostgreSQL
-    - Mongo DB
-    - Redis Caching
-  - Message Queue (Next implementation)
-    - RabbitMQ
-  - Cloud
-    - AWS Services: EC2, RDS, Route53
-    - Mongo DB Atlas
-    - Google Services: Domains
+  - Authentication & Authorization: https://github.com/Kofi-D-Boateng/LegacyBankAuthMicroservice
+  - Notifications: https://github.com/Kofi-D-Boateng/legacy-notifications-go
+  - Banking Process: https://github.com/Kofi-D-Boateng/LegacyBankingBackend
+  - Databases: PostgreSQL, MongoDB, Redis
+  - Message Queue (Next implementation): RabbitMQ
+  - Cloud: AWS (S3, RDS, EC2, Route53), Mongo Atlas
 
 ## FOR RECRUITERS
 Use this account to view the profile part of project (login)
