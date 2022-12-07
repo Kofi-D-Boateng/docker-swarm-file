@@ -12,15 +12,15 @@ Legacy Banking: legacybanking.us
     - Typescript + ReactJS v.18 w/ Nginx: https://github.com/Kofi-D-Boateng/LegacyBanking
 - Backend
   - Authentication & Authorization
-   - LB-Auth
-     - NodeJS: https://github.com/Kofi-D-Boateng/LegacyBankAuthMicroservice
-   - Notifications
-    - LB-Notifications
-     - NodeJS version: https://github.com/Kofi-D-Boateng/LegacyMailingAndMessageService
-     - Golang version: https://github.com/Kofi-D-Boateng/legacy-notifications-go
-   - Banking Process
-      - LB-Banking-API
-      - Java Spring Boot: https://github.com/Kofi-D-Boateng/LegacyBankingBackend
+    - LB-Auth
+      - NodeJS: https://github.com/Kofi-D-Boateng/LegacyBankAuthMicroservice
+    - Notifications
+     - LB-Notifications
+      - NodeJS version: https://github.com/Kofi-D-Boateng/LegacyMailingAndMessageService
+      - Golang version: https://github.com/Kofi-D-Boateng/legacy-notifications-go
+    - Banking Process
+       - LB-Banking-API
+       - Java Spring Boot: https://github.com/Kofi-D-Boateng/LegacyBankingBackend
   - Databases
     - PostgreSQL
     - Mongo DB
