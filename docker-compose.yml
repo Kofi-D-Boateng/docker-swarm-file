@@ -6,19 +6,19 @@ services:
       - frontend
     image: kdboateng/nginx-certbot
     ports:
-      - "443:443:"
+      - "443:443"
       - "80:80"
     deploy:
       restart_policy:
         condition: on-failure
       placement:
-        constraints:
-          [node.hostname ==  ip-172-31-45-238.us-east-2.compute.internal]
+        constraints: [node.hostname == ip-172-31-38-116]
 
-  frontend-service:
+  frontend:
+    container_name: frontend
     networks:
       - frontend
-    image: kdboateng/lb-frontend-service:latest
+    image: kdboateng/lb-frontend-service
     ports:
       - "3000:3000"
     environment:
@@ -29,12 +29,47 @@ services:
       restart_policy:
         condition: on-failure
       placement:
-        constraints: [node.role == worker]
+        constraints: []
 
-  redis-service:
+  backend:
+    container_name: backend
+    image: kdboateng/lb-api
+    networks:
+      - frontend
+      - backend
+      - notification
+      - auth
+    ports:
+      "8081:8081"
+    environment:
+      - ALLOWED_ORIGINS=
+      - API_VERSION=api/v1
+      - AWS_BUCKETNAME=
+      - AWS_REGION=
+      - AWS_ACCESS_KEY=
+      - AWS_SECRET_KEY=
+      - AUTH_SERVICE_DOMAIN=
+      - AUTH_SERVICE_PORT=
+      - AUTH_API_VERSION=
+      - BANK_API_VERSION=
+      - BANK_SERVICE_DOMAIN=
+      - BANK_SERVICE_PORT=  
+      - BANK_KH= 
+      - LOGGING_TYPE=
+      - PORT=
+      - NOTIF_API_VERSION=
+      - NOTIF_SERVICE_DOMAIN=
+      - NOTIF_SERVICE_PORT=
+      - REDIS_HOSTNAME=
+      - REDIS_PORT=
+      - RABBITMQ_URI=
+
+  redis:
+    container_name: redis
     networks:
       - backend
-    image: kdboateng/lb-redis-service:latest
+      - notification
+    image: redis
     ports:
       - "6379:6379"
     deploy:
@@ -42,26 +77,37 @@ services:
       restart_policy:
         condition: on-failure
       placement:
-        constraints:
-          [node.hostname == ip-172-31-46-129.us-east-2.compute.internal]
+        constraints: []
 
-  auth-service:
+  rabbit:
+    container_name: rabbitmq
     networks:
-      - frontend
-      - notification
+      - auth
       - backend
-    image: kdboateng/lb-auth-service:latest
+      - bank
+      - notification
+    image: rabbitmq:3.8.11
+    ports:
+      - "5672:5672"
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      placement:
+        constratins: []  
+
+  auth:
+    container_name: auth
+    networks:
+      - auth
+    image: kdboateng/lb-auth
     environment:
-      - REDIS_CACHE_PORT=6379
-      - REDIS_CACHE_DOMAIN=lb-redis-service
-      - AUTH_PORT=8081
-      - JWT_ALGO=HS256
-      - JWT_EXPIRES_IN=1800000
-      - LB_BANK_API_PORT=8080
-      - LB_NOTI_API_PORT=5500
-      - LB_BANK_API_DOMAIN=http://lb-bank
-      - LB_NOTI_API_DOMAIN=http://lb-notification
-      - CORS_ALLOW_ORIGINS=*
+      - API_VERSION=api/v1
+      - DB_DRIVER=postgres
+      - DB_CONN=
+      - MESSAGE_BROKER_ADDR=amqp://localhost:5672
+      - PORT=:5050
+      - REDIS_ADDR=localhost:6379
     ports:
       - "8081:8081"
     deploy:
@@ -69,21 +115,21 @@ services:
       restart_policy:
         condition: on-failure
       placement:
-        constraints:
-          [node.hostname == ip-172-31-46-129.us-east-2.compute.internal]
+        constraints: []
 
-  notification-service:
+  notification:
+    container_name: notification
     networks:
       - notification
-    image: kdboateng/lb-notifications-go:latest
+    image: kdboateng/lb-notifications-go
     environment:
       - GO_ENV=prod
       - PORT=:5500
-      - API_VERSION=api/v1
-      - MONGO_URI=mongodb+srv://autodrive-admin-1:lamarrazorback2!@autodriveone.70icx.mongodb.net/?retryWrites=true&w=majority
-      - DB_NAME=legacyDB
-      - USERS_COLLECTION=users
-      - CUSTOMER_SERVICE_COLLECTION=customer_services
+      - API_VERSION=api/v2
+      - MONGO_URI=
+      - DB_NAME=
+      - USERS_COLLECTION=
+      - CUSTOMER_SERVICE_COLLECTION=
       - SMTP_HOST=smtp.office365.com
       - SMTP_PORT=587
       - COMPANY_EMAIL=
@@ -96,16 +142,17 @@ services:
       restart_policy:
         condition: on-failure
       placement:
-        constraints: [node.role == worker]
+        constraints: []
 
-  bank-service:
+  bank:
+    container_name: bank
     networks:
-      - backend
-    image: kdboateng/lb-banking-api:latest
+      - bank
+    image: kdboateng/lb-banking-api
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://database-1.c9zoanurtfd0.us-east-2.rds.amazonaws.com:5432/legacydb
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=AllAmerican217!
+      - SPRING_DATASOURCE_URL=
+      - SPRING_DATASOURCE_USERNAME=
+      - SPRING_DATASOURCE_PASSWORD=
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_SHOW_SQL=false
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
@@ -117,12 +164,15 @@ services:
       restart_policy:
         condition: on-failure
       placement:
-        constraints: [node.role == manager]
+        constraints: []
 
 networks:
   frontend:
     external: false
-  notification:
-    external: false
   backend:
     external: false
+  auth:
+    external: false
+  notification:
+    external: false
+  
