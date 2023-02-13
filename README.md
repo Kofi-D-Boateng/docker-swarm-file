@@ -11,28 +11,22 @@
     - Creating Event-Driven Architecture
 
 ## Project Architecture
---
-    - Frontend
-        - [LB Frontend | Typescript + ReactJS v.18 w/ Nginx](https://github.com/Kofi-D-Boateng/LegacyBanking)
-    - Backend Services
-        - Main API
-            - [LB API | Typescript & NodeJS](https://github.com/Kofi-D-Boateng/legacybanking-api.git)
-        - Authentication & Authorization
-            - [LB-Auth | Golang](https://github.com/Kofi-D-Boateng/LegacyBankAuthMicroservice)
-        - Notifications & Mailing
-            - [LB-Notifications | Golang](https://github.com/Kofi-D-Boateng/legacybanking-notifications.git)
-        - Banking Process
-            - [LB-Banking-API | Java 8+ & Spring Boot](https://github.com/Kofi-D-Boateng/LegacyBankingBackend)
-    - Databases
-        - PostgreSQL
-        - MongoDB 
-        - Redis Caching
-    - Message Queue
-        - RabbitMQ
-    - Cloud
-        - AWS Services: S3, EC2, RDS, Route53
-        - Mongo DB Atlas
-        - Google Services: Domains
+---
+[LB Frontend | Typescript + ReactJS v.18 w/ Nginx](https://github.com/Kofi-D-Boateng/LegacyBanking)
+[LB API | Typescript & NodeJS](https://github.com/Kofi-D-Boateng/legacybanking-api.git)
+[LB-Auth | Golang](https://github.com/Kofi-D-Boateng/LegacyBankAuthMicroservice)
+[LB-Notifications | Golang](https://github.com/Kofi-D-Boateng/legacybanking-notifications.git)
+[LB-Banking-API | Java 8+ & Spring Boot](https://github.com/Kofi-D-Boateng/LegacyBankingBackend)
+- Databases
+    - PostgreSQL
+    - MongoDB 
+    - Redis Caching
+- Message Queue
+    - RabbitMQ
+- Cloud
+    - AWS Services: S3, EC2, RDS, Route53
+    - Mongo DB Atlas
+    - Google Services: Domains
 
 ## FOR RECRUITERS TO TEST
 
