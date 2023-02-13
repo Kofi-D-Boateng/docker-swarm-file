@@ -2,7 +2,7 @@
 ---
 ## Link
 ---
-    [Legacy Banking Project Website] (legacybanking.us)
+[Legacy Banking Project Website](legacybanking.us)
 
 ## Purpose of project
 ---
@@ -13,16 +13,16 @@
 ## Project Architecture
 ---
     - Frontend
-        - [LB Frontent | Typescript + ReactJS v.18 w/ Nginx] (https://github.com/Kofi-D-Boateng/LegacyBanking)
+        - [LB Frontent | Typescript + ReactJS v.18 w/ Nginx](https://github.com/Kofi-D-Boateng/LegacyBanking)
     - Backend Services
         - Main API
-            [LB API | Typescript & NodeJS] (https://github.com/Kofi-D-Boateng/legacybanking-api.git)
+            [LB API | Typescript & NodeJS](https://github.com/Kofi-D-Boateng/legacybanking-api.git)
         - Authentication & Authorization
-            - [LB-Auth | Golang] (https://github.com/Kofi-D-Boateng/LegacyBankAuthMicroservice)
+            - [LB-Auth | Golang](https://github.com/Kofi-D-Boateng/LegacyBankAuthMicroservice)
         - Notifications & Mailing
-            - [LB-Notifications | Golang] (https://github.com/Kofi-D-Boateng/legacybanking-notifications.git)
+            - [LB-Notifications | Golang](https://github.com/Kofi-D-Boateng/legacybanking-notifications.git)
         - Banking Process
-            - [LB-Banking-API | Java 8+ & Spring Boot] (https://github.com/Kofi-D-Boateng/LegacyBankingBackend)
+            - [LB-Banking-API | Java 8+ & Spring Boot](https://github.com/Kofi-D-Boateng/LegacyBankingBackend)
     - Databases
         - PostgreSQL
         - MongoDB 
