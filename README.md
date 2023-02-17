@@ -9,7 +9,6 @@
    - Creating Event-Driven Architecture
 
 ## Project Architecture
----
  - [LB Frontend | Typescript + ReactJS v.18 w/ Nginx](https://github.com/Kofi-D-Boateng/LegacyBanking)
  - [LB API | Typescript & NodeJS](https://github.com/Kofi-D-Boateng/legacybanking-api.git)
  - [LB-Auth | Golang](https://github.com/Kofi-D-Boateng/LegacyBankAuthMicroservice)
