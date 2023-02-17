@@ -1,13 +1,12 @@
 # Legacy Banking Compose File
----
+
 ## Link
 [Legacy Banking Project Website](https://legacybanking.us)
 
 ## Purpose of project
----
-    - Learning Docker and Docker Swarm for node-clustering
-    - Cloud intergration of Microservice
-    - Creating Event-Driven Architecture
+   - Learning Docker and Docker Swarm for node-clustering
+   - Cloud intergration of Microservice
+   - Creating Event-Driven Architecture
 
 ## Project Architecture
 ---
