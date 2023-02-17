@@ -1,8 +1,7 @@
 # Legacy Banking Compose File
 ---
 ## Link
----
-[Legacy Banking Project Website](legacybanking.us)
+[Legacy Banking Project Website](https://legacybanking.us)
 
 ## Purpose of project
 ---
