@@ -1,7 +1,7 @@
 # Legacy Banking Compose File
 
 ## Link
-[Legacy Banking Project Website](https://legacybanking.us)
+[Legacy Banking Project Website](https://lgeacybankproject.dev)
 
 ## Purpose of project
    - Learning Docker and Docker Swarm for node-clustering
