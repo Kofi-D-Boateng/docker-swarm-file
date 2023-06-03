@@ -6,13 +6,13 @@ services:
       - frontend
     image: kdboateng/nginx-certbot
     ports:
-      - "443:443"
-      - "80:80"
+      - ""
+      - ""
     deploy:
       restart_policy:
         condition: on-failure
       placement:
-        constraints: [node.hostname == ip-172-31-38-116]
+        constraints: []
 
   frontend:
     container_name: frontend
@@ -20,10 +20,10 @@ services:
       - frontend
     image: kdboateng/lb-frontend-service
     ports:
-      - "3000:3000"
+      - ""
     environment:
-      - REACT_APP_BUFFERTIME=600000
-      - REACT_APP_API_VERSION=api/v1
+      - REACT_APP_BUFFERTIME=
+      - REACT_APP_API_VERSION=
     deploy:
       replicas: 3
       restart_policy:
@@ -40,10 +40,10 @@ services:
       - notification
       - auth
     ports:
-      "8081:8081"
+      ""
     environment:
       - ALLOWED_ORIGINS=
-      - API_VERSION=api/v1
+      - API_VERSION=
       - AWS_BUCKETNAME=
       - AWS_REGION=
       - AWS_ACCESS_KEY=
@@ -88,7 +88,7 @@ services:
       - notification
     image: rabbitmq:3.8.11
     ports:
-      - "5672:5672"
+      - ""
     deploy:
       replicas: 2
       restart_policy:
@@ -105,11 +105,11 @@ services:
       - API_VERSION=api/v1
       - DB_DRIVER=postgres
       - DB_CONN=
-      - MESSAGE_BROKER_ADDR=amqp://localhost:5672
+      - MESSAGE_BROKER_ADDR=
       - PORT=:5050
-      - REDIS_ADDR=localhost:6379
+      - REDIS_ADDR=
     ports:
-      - "8081:8081"
+      - ""
     deploy:
       replicas: 3
       restart_policy:
@@ -130,13 +130,13 @@ services:
       - DB_NAME=
       - USERS_COLLECTION=
       - CUSTOMER_SERVICE_COLLECTION=
-      - SMTP_HOST=smtp.office365.com
+      - SMTP_HOST=
       - SMTP_PORT=587
       - COMPANY_EMAIL=
       - COMPANY_PASSWORD=
-      - ACCT_AUTH_LINK=http://www.legacybanking.us/confirm-account
+      - ACCT_AUTH_LINK=
     ports:
-      - "5500:5500"
+      - ""
     deploy:
       replicas: 3
       restart_policy:
@@ -155,10 +155,10 @@ services:
       - SPRING_DATASOURCE_PASSWORD=
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_SHOW_SQL=false
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=
       - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=true
     ports:
-      - "8080:8080"
+      - ""
     deploy:
       replicas: 3
       restart_policy:
